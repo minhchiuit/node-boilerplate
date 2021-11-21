@@ -10,15 +10,16 @@ export MONGODB_URL="mongodb://127.0.0.1:27017/mern-auth"
 
 # JWT
 # JWT secret key
-export JWT_SECRET=123123
-# Number of minutes after which an access token expires
-export JWT_ACCESS_EXPIRATION_MINUTES=30
-# Number of days after which a refresh token expires
-export JWT_REFRESH_EXPIRATION_DAYS=30
-# Number of minutes after which a reset password token expires
-export JWT_RESET_PASSWORD_EXPIRATION_MINUTES=10
-# Number of minutes after which a verify email token expires
-export JWT_VERIFY_EMAIL_EXPIRATION_MINUTES=10
+export JWT_ACCESS_SECRET=123123
+export JWT_REFRESH_SECRET=123123
+export JWT_ACTIVATE_SECRET=123123
+export JWT_RESET_PASSWORD_SECRET=10m
+
+# JWT expirations
+export JWT_ACCESS_EXPIRATION=15m
+export JWT_REFRESH_EXPIRATION=30days
+export JWT_RESET_PASSWORD_EXPIRATION=10m
+export JWT_ACTIVATE_EXPIRATION=5m
 
 
 # SMTP configuration options for the email service

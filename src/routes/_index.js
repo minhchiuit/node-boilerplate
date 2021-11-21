@@ -1,17 +1,17 @@
 import { Router } from 'express'
-// import authRoutes from './auth.js'
-// import uploadRoutes from './upload.js'
+import authRoutes from './auth.route'
+import userRoutes from './user.route'
+// import uploadRoutes from './upload'
 const router = new Router()
 
 const defaultRoutes = [
-  // {
-  // 	path: '/upload',
-  // 	route: 'uploadRoutes',
-  // },
   {
     path: '/auth',
-    // route: 'authRoutes',
-    route: (req, res, next) => res.json({ success: true }),
+    route: authRoutes,
+  },
+  {
+    path: '/users',
+    route: userRoutes,
   },
 ]
 

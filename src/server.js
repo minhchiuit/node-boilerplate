@@ -1,5 +1,6 @@
 import express from 'express'
 import morgan from 'morgan'
+import passport from 'passport'
 import cookieParser from 'cookie-parser'
 import mongoSanitize from 'express-mongo-sanitize'
 import helmet from 'helmet'
@@ -9,13 +10,14 @@ import cors from 'cors'
 import httpError from 'http-errors'
 import 'colors'
 
-import logger from './config/logger.js'
-import db from './config/db.js'
-import config from './config/config.js'
-import errorHandler from './middlewares/error.js'
-import routes from './routes/_index.js'
-import { authLimiter } from './config/rateLimit.js'
-
+import { jwtStrategy } from './config/passport'
+import db from './config/db'
+import logger from './config/logger'
+import { node_env, app_port } from './config/env.config'
+import errorHandler from './middlewares/error'
+import routes from './routes/_index'
+import { authLimiter } from './config/rateLimit'
+import config from './config/env.config'
 // connect to database
 db.connect()
 
@@ -29,10 +31,10 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // cookie parser
-app.use(cookieParser())
+app.use(cookieParser(config.jwt.secret.refresh))
 
 // dev logging middleware
-if (config.env === 'development') {
+if (node_env === 'development') {
   app.use(morgan('dev'))
 }
 
@@ -46,7 +48,7 @@ app.use(helmet())
 app.use(xss())
 
 // limit repeated failed requests to auth endpoints
-if (config.env === 'production') {
+if (node_env === 'production') {
   app.use('/api/auth', authLimiter)
 }
 
@@ -56,6 +58,10 @@ app.use(hpp())
 // enable CORS
 app.use(cors())
 
+// jwt authentication
+app.use(passport.initialize())
+passport.use('jwt', jwtStrategy)
+
 // Set static folder
 
 // api routes
@@ -63,17 +69,15 @@ app.use('/api', routes)
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
-  return next(new httpError.NotFound())
+  return next(new httpError.NotFound('Not found api request'))
 })
 
 // handle error
 app.use(errorHandler)
 
 const server = app.listen(
-  config.app_port,
-  logger.info(
-    `Server running in ${config.env} mode on port ${config.app_port}`.cyan
-  )
+  app_port,
+  logger.info(`Server running in ${node_env} mode on port ${app_port}`.cyan)
 )
 
 // Handle unhandled promise rejections
