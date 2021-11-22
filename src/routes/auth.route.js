@@ -1,7 +1,7 @@
 import { Router } from 'express'
 const router = new Router()
 import authController from '../controllers/auth.controller'
-import protect from '../middlewares/auth'
+import protect, { auth } from '../middlewares/auth'
 import validate from '../middlewares/validate'
 import {
   register,
@@ -28,9 +28,15 @@ router.post(
   validate(resetPassword),
   authController.resetPassword
 )
-router.post('/signout', authController.singout)
-router.get('/info', validate(register), authController.info)
-router.patch('/update-user', validate(updateInfo), authController.updateInfo)
+router.get('/info', protect, authController.info)
+router.patch(
+  '/user-update',
+  protect,
+  validate(updateInfo),
+  authController.updateInfo
+)
+router.post('/signout', protect, authController.singout)
+
 router.patch('/google-signing', authController.loginWithGoogle)
 
 export default router

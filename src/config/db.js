@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
-import { mongodb_url } from './env.config'
+import config from './config'
 import logger from './logger'
 
 const connect = async () => {
   const options = {}
-  const conn = await mongoose.connect(mongodb_url, options)
+  const conn = await mongoose.connect(config.mongodbUrl, options)
   logger.info(`MongDB Connected: ${conn.connection.host}`.yellow.bold.underline)
 }
 export default { connect }

@@ -35,12 +35,12 @@ export EMAIL_FROM=minhch.vn@gmail.com
 
 
 # GOOGLE APIS
-G_CLIENT_ID=309952684179-4pj2d30jsk3hqr86n5fodk9uf7dahb7q.apps.googleusercontent.com
-G_CLIENT_SECRET=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
-G_REFRESH_TOKEN=1//04zDxXAWExbzfCgYIARAAGAQSNwF-L9IrtKEeQB3iWdoACbLvigcj81Kxq-QL-3-BsS3XUOD3BW8YUs4dw6fQpQLUKjFVOeQuB_w
+export G_CLIENT_ID=475832399723-ml78uslm7malg5dce29ipeboceede68b.apps.googleusercontent.com
+export G_CLIENT_SECRET=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
+export G_REFRESH_TOKEN=1//04P3BSN-bo5oQCgYIARAAGAQSNwF-L9Ir2TiSl3Y0nJresd21791jL0dtf21hi_DCRuM7KRxk4b65F7jzgfo2zV8PfU17_PxoXM8
 
 # EMAIL
-ADMIN_EMAIL=minhchiu.it@gmail.com
+export ADMIN_EMAIL=minhchiu.it@gmail.com
 
 # CLOUDINARY 
 export CLOUD_NAME=djvd6zhbg

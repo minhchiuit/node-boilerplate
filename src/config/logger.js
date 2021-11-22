@@ -1,5 +1,5 @@
 import { createLogger, transports, format } from 'winston'
-import { node_env } from './env.config.js'
+import config from './config.js'
 const { combine, colorize, uncolorize, label, splat, printf } = format
 
 // enumerate error
@@ -10,11 +10,11 @@ const enumerateErrorFormat = format(info => {
   return info
 })
 const logConfiguration = {
-  level: node_env === 'development' ? 'debug' : 'info',
+  level: config.env === 'development' ? 'debug' : 'info',
   transports: [new transports.Console()],
   format: combine(
     enumerateErrorFormat(),
-    node_env === 'development' ? colorize({ all: true }) : uncolorize(),
+    config.env === 'development' ? colorize({ all: true }) : uncolorize(),
     label({
       label: __filename.split('/').pop(),
     }),

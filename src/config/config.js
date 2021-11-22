@@ -17,10 +17,24 @@ export const {
   JWT_RESET_PASSWORD_SECRET: resetPasswordSecret,
   JWT_RESET_PASSWORD_EXPIRATION: resetPasswordExpiration,
 
+  // google clients
+  G_CLIENT_ID: gClientId,
+  G_CLIENT_SECRET: gClientSecret,
+  G_REFRESH_TOKEN: gRefreshToken,
+  ADMIN_EMAIL: adminEmail,
   //
 } = process.env
 
 const config = {
+  env: node_env,
+  port: app_port,
+  mongodbUrl: mongodb_url,
+  googleClient: {
+    id: gClientId,
+    secret: gClientSecret,
+    refreshToken: gRefreshToken,
+  },
+  adminEmail,
   jwt: {
     secret: {
       access: accessSecret,

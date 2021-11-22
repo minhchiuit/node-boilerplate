@@ -13,11 +13,11 @@ import 'colors'
 import { jwtStrategy } from './config/passport'
 import db from './config/db'
 import logger from './config/logger'
-import { node_env, app_port } from './config/env.config'
+import { node_env, app_port } from './config/config'
 import errorHandler from './middlewares/error'
 import routes from './routes/_index'
 import { authLimiter } from './config/rateLimit'
-import config from './config/env.config'
+import config from './config/config'
 // connect to database
 db.connect()
 

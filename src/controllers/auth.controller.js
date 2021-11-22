@@ -1,8 +1,13 @@
 import createError from 'http-errors'
 import catchAsync from '../utils/catchAsync'
 
-import config from '../config/env.config'
-import { userService, authService, tokenService } from '../services'
+import config from '../config/config'
+import {
+  userService,
+  authService,
+  tokenService,
+  emailService,
+} from '../services'
 import sendMail from '../helpers/sendMail'
 import createHttpError from 'http-errors'
 
@@ -11,13 +16,8 @@ import createHttpError from 'http-errors'
  * @access public
  */
 const register = catchAsync(async (req, res, next) => {
-  // create token
   const activation_token = await tokenService.generateActivationToken(req.body)
-
-  // send email
-  const url = `http://localhost:8888/api/auth/activate/${activation_token}`
-  sendMail.sendEmailRegister(req.body.email, url, 'Verify your email')
-
+  await emailService.sendEmailRegister(req.body.email, activation_token)
   // registration success
   return res.status(200).json({
     success: true,
@@ -95,15 +95,17 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   const ac_token = await tokenService.generateAccessToken(user.id)
 
   // send email
-  const url = `http://localhost:3000/auth/reset-password/${ac_token}`
-  sendMail.sendEmailReset(req.body.email, url, 'Reset your password', 'minh')
+  await emailService.sendEmailResetPassword(
+    req.body.email,
+    ac_token,
+    user.fullName
+  )
 
   // success
   res.status(200).json({
     success: true,
     message: 'Re-send the password, please check your email.',
   })
-  res.status(200).json({ success: true })
 })
 
 /**
@@ -132,7 +134,10 @@ const info = catchAsync(async (req, res) => {
  * @PATCH api/user-update
  * @access public
  */
-const updateInfo = catchAsync(async (req, res, next) => {})
+const updateInfo = catchAsync(async (req, res, next) => {
+  const userUpdated = await userService.updateUserById(req.user.id, req.body)
+  res.status(200).json({ success: true, userUpdated })
+})
 
 /**
  * @GET api/singout

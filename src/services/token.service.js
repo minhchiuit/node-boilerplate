@@ -9,7 +9,7 @@ import {
   activateExpiration,
   resetPasswordSecret,
   resetPasswordExpiration,
-} from '../config/env.config'
+} from '../config/config'
 import * as userService from './user.service'
 
 /**

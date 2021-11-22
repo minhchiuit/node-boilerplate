@@ -1,5 +1,5 @@
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt'
-import config from './env.config'
+import config from './config'
 import User from '../models/user.model'
 
 const jwtOptions = {
