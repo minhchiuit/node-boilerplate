@@ -22,6 +22,9 @@ export const {
   G_CLIENT_SECRET: gClientSecret,
   G_REFRESH_TOKEN: gRefreshToken,
   ADMIN_EMAIL: adminEmail,
+
+  G_SECRET: gSecret,
+  FB_SECRET: fbSecret,
   //
 } = process.env
 
@@ -35,6 +38,8 @@ const config = {
     refreshToken: gRefreshToken,
   },
   adminEmail,
+  gSecret,
+  fbSecret,
   jwt: {
     secret: {
       access: accessSecret,

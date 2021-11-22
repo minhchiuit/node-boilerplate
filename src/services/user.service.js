@@ -69,6 +69,22 @@ const updateUserById = async (userId, body) => {
 }
 
 /**
+ * Update user by id
+ * @param {ObjectId} userId
+ * @param {Object} body
+ * @returns {Promise<user>}
+ */
+const updateUserPasswordById = async (userId, body) => {
+  const user = await getUserById(userId)
+  if (!user) {
+    throw createError.NotFound('Not found user')
+  }
+  Object.assign(user, body)
+  await user.save()
+  return user
+}
+
+/**
  * Delte user by id
  * @param {ObjectId} userId
  * @returns {Promise<user>}
@@ -89,4 +105,5 @@ export {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  updateUserPasswordById,
 }

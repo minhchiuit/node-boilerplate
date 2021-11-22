@@ -38,5 +38,6 @@ router.patch(
 router.post('/signout', protect, authController.singout)
 
 router.patch('/google-signing', authController.loginWithGoogle)
+router.patch('/facebook-signing', authController.loginWithFacebook)
 
 export default router
