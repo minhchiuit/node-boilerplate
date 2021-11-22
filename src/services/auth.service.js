@@ -1,5 +1,11 @@
 import createError from 'http-errors'
+import fetch from 'node-fetch'
+import { google } from 'googleapis'
+
+import config from '../config/config'
 import { getUserByEmail } from './user.service'
+import { userService } from '.'
+
 /**
  * Login user with email and password
  * @param {string} email
@@ -14,18 +20,70 @@ const loginWithEmailAndPassword = async (email, password) => {
 
 /**
  *
- * @param {string} resetPasswordToken
- * @param {string} newPassword
+ * @param {string} tokenId
  * @returns {Promise<User>}
  */
-const resetPassword = async (resetPasswordToken, newPassword) => {
+const loginWithGoogle = async tokenId => {
+  const { OAuth2 } = google.auth
+  const client = new OAuth2(config.googleClient.id)
   // verify token
-  // update
-  const user = await getUserByEmail(email)
-  if (!user || user.isPasswordMatch(password)) {
-    throw new createError.Unauthorized('Incorrect email or password')
+  const verify = await client.verifyIdToken({
+    idToken: tokenId,
+    audience: config.googleClient.id,
+  })
+  const { email_verified, email, given_name, family_name, picture } =
+    verify.payload
+  console.log({ verifyLoginWithGG: verify.payload })
+
+  // failed verification
+  if (!email_verified)
+    return res
+      .status(400)
+      .json({ success: false, error: 'Email verification failed.' })
+
+  // 1. if user exist/sign in
+  const user = userService.getUserByEmail(email)
+  if (user) return user
+
+  //2. New user/create user
+  const password = email + config.gSecret
+  let newUser = {
+    email,
+    firstName: given_name,
+    lastName: family_name,
+    avatar: picture,
+    password,
   }
-  return user
+  newUser = await userService.createUser(newUser)
+
+  return newUser
 }
 
-export { loginWithEmailAndPassword }
+const loginWithFacebook = async (accessToken, userId) => {
+  const url = `https://graph.facebook.com/v4.0/${userId}?fields=id,name,email,picture&access_token=${accessToken}`
+  const data = fetch(url)
+    .then(res => res.json())
+    .then(res => res)
+
+  console.log(data)
+  const { email, name, picture } = data
+
+  // 1. if user exist/sign in
+  const user = userService.getUserByEmail(email)
+  if (user) return user
+
+  //2. New user/create user
+  const password = email + config.fbSecret
+  let newUser = {
+    email,
+    firstName: name,
+    lastName: name,
+    avatar: picture,
+    password,
+  }
+  newUser = await userService.createUser(newUser)
+
+  return newUser
+}
+
+export { loginWithEmailAndPassword, loginWithGoogle, loginWithFacebook }

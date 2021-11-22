@@ -46,3 +46,8 @@ export ADMIN_EMAIL=minhchiu.it@gmail.com
 export CLOUD_NAME=djvd6zhbg
 export CLOUD_API_KEY=849999119615753
 export CLOUD_API_SECRET=X_g1A1Y2E1s9bGeuFaALttvOeLg
+
+
+# 
+export FB_SECRET=GwcTnAckK7xgb3jkzbSUkUHemz4Kbzg36hRHTjNb
+export G_SECRET=GwcTnAckK7xgb3jkzbSUkUHemz4Kbzg36hRHTjNb

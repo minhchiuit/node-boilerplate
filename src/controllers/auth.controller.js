@@ -8,7 +8,6 @@ import {
   tokenService,
   emailService,
 } from '../services'
-import sendMail from '../helpers/sendMail'
 import createHttpError from 'http-errors'
 
 /**
@@ -113,7 +112,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
  * @access public
  */
 const resetPassword = catchAsync(async (req, res) => {
-  await userService.updateUserById(req.user.id, req.body)
+  await userService.updateUserPasswordById(req.user.id, req.body)
   // reset success
   res
     .status(200)
@@ -154,7 +153,34 @@ const singout = catchAsync(async (req, res) => {
  * @POST api/signing-google
  * @access public
  */
-const loginWithGoogle = catchAsync(async (req, res) => {})
+const loginWithGoogle = catchAsync(async (req, res) => {
+  const user = await authService.loginWithGoogle(req.body)
+
+  // refresh token
+  const rf_token = await tokenService.generateRefreshToken(user.id)
+
+  // store refresh token
+  res.cookie('_apprftoken', rf_token, config.jwt.cookie)
+
+  res.status(200).json({ success: true, message: 'Signning success.' })
+})
+
+/**
+ * @POST api/signing-google
+ * @access public
+ */
+const loginWithFacebook = catchAsync(async (req, res) => {
+  const { accessToken, userId } = req.body
+  const user = await authService.loginWithFacebook(accessToken, userId)
+
+  // refresh token
+  const rf_token = await tokenService.generateRefreshToken(user.id)
+
+  // store refresh token
+  res.cookie('_apprftoken', rf_token, config.jwt.cookie)
+
+  res.status(200).json({ success: true, message: 'Signning success.' })
+})
 
 export default {
   register,
@@ -167,4 +193,5 @@ export default {
   updateInfo,
   singout,
   loginWithGoogle,
+  loginWithFacebook,
 }
