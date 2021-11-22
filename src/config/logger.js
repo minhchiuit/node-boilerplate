@@ -1,7 +1,6 @@
-import winston from 'winston'
+import { createLogger, transports, format } from 'winston'
 import config from './config.js'
-
-const { createLogger, format, transports } = winston
+const { combine, colorize, uncolorize, label, splat, printf } = format
 
 // enumerate error
 const enumerateErrorFormat = format(info => {
@@ -10,24 +9,20 @@ const enumerateErrorFormat = format(info => {
   }
   return info
 })
-
-// custom format log
-const customFormat = format.combine(
-  enumerateErrorFormat(),
-  config.env === 'development' ? format.colorize() : format.uncolorize(),
-  format.splat(),
-  format.printf(({ level, message }) => `[${level}]: ${message}`)
-)
-
-// logger
-const logger = createLogger({
+const logConfiguration = {
   level: config.env === 'development' ? 'debug' : 'info',
-  format: customFormat,
-  transports: [
-    new transports.Console({
-      stderrLevels: ['error'],
+  transports: [new transports.Console()],
+  format: combine(
+    enumerateErrorFormat(),
+    config.env === 'development' ? colorize({ all: true }) : uncolorize(),
+    label({
+      label: __filename.split('/').pop(),
     }),
-  ],
-})
+    splat(),
+    printf(info => `${info.level}`.bold + `: ${info.message}`)
+  ),
+}
+
+const logger = createLogger(logConfiguration)
 
 export default logger

@@ -1,5 +1,5 @@
 import httpError from 'http-errors'
-import logger from '../config/logger.js'
+import logger from '../config/logger'
 import { object } from 'yup'
 
 const validate = schema => (req, res, next) => {
@@ -18,7 +18,7 @@ const validate = schema => (req, res, next) => {
     Object.assign(req, value)
     return next()
   } catch (error) {
-    return next(httpError.BadRequest(error.errors))
+    next(new httpError.BadRequest(error.errors))
   }
 }
 

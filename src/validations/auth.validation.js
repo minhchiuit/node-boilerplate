@@ -1,16 +1,13 @@
 import * as yup from 'yup'
-import config from './config.validation.js'
-
+import { transValidations } from '../../lang/en'
+import config from './config.validation'
 const register = {
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   email: yup.string().required().email(),
   password: yup
     .string()
-    .matches(
-      config.regexPassword,
-      'Password must contain at least 1 letter and 1 number, and at least 6 or more characters'
-    )
+    .matches(config.regexPassword, transValidations.password_incorrect)
     .required(),
 }
 
@@ -22,10 +19,7 @@ const signing = {
   email: yup.string().required(),
   password: yup
     .string()
-    .matches(
-      config.regexPassword,
-      'Password must contain at least 1 letter and 1 number, and at least 6 or more characters'
-    )
+    .matches(config.regexPassword, transValidations.password_incorrect)
     .required(),
 }
 
@@ -36,10 +30,7 @@ const forgotPassword = {
 const resetPassword = {
   password: yup
     .string()
-    .matches(
-      config.regexPassword,
-      'Password must contain at least 1 letter and 1 number, and at least 6 or more characters'
-    )
+    .matches(config.regexPassword, transValidations.password_incorrect)
     .required(),
 }
 
@@ -49,8 +40,7 @@ const updateInfo = {
   email: yup.string().email(),
   checkbox_selection: yup.string().when(['firstName', 'lastName', 'email'], {
     is: (firstName, lastName, email) => !firstName && !lastName && !email,
-    then: yup.string().required('At least one checkbox is to be selected'),
-    otherwise: yup.string(),
+    then: yup.string().required(),
   }),
 }
 
@@ -65,6 +55,5 @@ export {
   forgotPassword,
   resetPassword,
   updateInfo,
-  updateAvatar,
   singout,
 }

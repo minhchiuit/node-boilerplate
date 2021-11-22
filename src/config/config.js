@@ -1,31 +1,66 @@
-import dotenv from 'dotenv'
+export const {
+  // app
+  NODE_ENV: node_env,
+  PORT: app_port,
+  MONGODB_URL: mongodb_url,
 
-dotenv.config()
+  // jwt
+  JWT_ACCESS_SECRET: accessSecret,
+  JWT_ACCESS_EXPIRATION: accessExpiration,
 
-const {
-  PORT,
-  NODE_ENV,
-  MONGODB_URL,
-  G_CLIENT_ID,
-  G_CLIENT_SECRET,
-  G_REFRESH_TOKEN,
-  ADMIN_EMAIL,
-  CLOUD_NAME,
-  CLOUD_API_KEY,
-  CLOUD_API_SECRET,
+  JWT_REFRESH_SECRET: refreshSecret,
+  JWT_REFRESH_EXPIRATION: refreshExpiration,
+
+  JWT_ACTIVATE_SECRET: activateSecret,
+  JWT_ACTIVATE_EXPIRATION: activateExpiration,
+
+  JWT_RESET_PASSWORD_SECRET: resetPasswordSecret,
+  JWT_RESET_PASSWORD_EXPIRATION: resetPasswordExpiration,
+
+  // google clients
+  G_CLIENT_ID: gClientId,
+  G_CLIENT_SECRET: gClientSecret,
+  G_REFRESH_TOKEN: gRefreshToken,
+  ADMIN_EMAIL: adminEmail,
+  //
 } = process.env
 
 const config = {
-  env: NODE_ENV,
-  app_port: PORT,
-  mongodb_uri: MONGODB_URL,
-  gClientId: G_CLIENT_ID,
-  gClientSecret: G_CLIENT_SECRET,
-  gRefreshToken: G_REFRESH_TOKEN,
-  adminEmail: ADMIN_EMAIL,
-  cloud_name: CLOUD_NAME,
-  cloud_api_key: CLOUD_API_KEY,
-  cloud_api_secret: CLOUD_API_SECRET,
+  env: node_env,
+  port: app_port,
+  mongodbUrl: mongodb_url,
+  googleClient: {
+    id: gClientId,
+    secret: gClientSecret,
+    refreshToken: gRefreshToken,
+  },
+  adminEmail,
+  jwt: {
+    secret: {
+      access: accessSecret,
+      refresh: refreshSecret,
+      activate: activateSecret,
+      resetPassword: resetPasswordSecret,
+    },
+    expiration: {
+      access: accessExpiration,
+      refresh: refreshExpiration,
+      activate: activateExpiration,
+      resetPassword: resetPasswordExpiration,
+    },
+    options: {
+      audience: 'https://example.io',
+      expiresIn: '12h', // 1d
+      issuer: 'example.io',
+    },
+    cookie: {
+      path: '/api/auth/access',
+      maxAge: 1000,
+      httpOnly: true,
+      sameSite: true,
+      signed: true,
+      secure: true,
+    },
+  },
 }
-
 export default config
