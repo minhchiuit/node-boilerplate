@@ -25,7 +25,10 @@ export const {
 
   G_SECRET: gSecret,
   FB_SECRET: fbSecret,
-  //
+  //cloud
+  CLOUD_NAME: cloudName,
+  CLOUD_API_KEY: cloudApiKey,
+  CLOUD_API_SECRET: cloudApiSecret,
 } = process.env
 
 const config = {
@@ -66,6 +69,11 @@ const config = {
       signed: true,
       secure: true,
     },
+  },
+  cloud: {
+    name: cloudName,
+    apiKey: cloudApiKey,
+    apiSecret: cloudApiSecret,
   },
 }
 export default config
