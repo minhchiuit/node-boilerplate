@@ -1,4 +1,5 @@
 import express from 'express'
+import path from 'path'
 import morgan from 'morgan'
 import passport from 'passport'
 import cookieParser from 'cookie-parser'
@@ -63,6 +64,7 @@ app.use(passport.initialize())
 passport.use('jwt', jwtStrategy)
 
 // Set static folder
+app.use(express.static(path.join(__dirname, 'src', 'uploads')))
 
 // api routes
 app.use('/api', routes)
