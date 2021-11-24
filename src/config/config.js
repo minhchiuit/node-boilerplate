@@ -80,7 +80,7 @@ const config = {
   },
 
   max_event_listeners: 30,
-  avatar_directory: 'src/uploads',
+  temp_directory: 'src/public/temp',
   avatar_types: ['image/jpg', 'image/png', 'image/jpeg'],
   avatar_limit_size: 1048576, // 1048576 byte = 1MB
 }

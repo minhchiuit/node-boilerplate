@@ -1,8 +1,9 @@
 import multer from 'multer'
+import config from '../config/config'
 const storage = multer.diskStorage({
   // destination
   destination: (req, file, cb) => {
-    cb(null, 'src/uploads/')
+    cb(null, config.temp_directory)
   },
   // filename
   filename: (req, file, cb) => {
