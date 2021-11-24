@@ -29,5 +29,5 @@ const auth =
     })(req, res, next)
   }
 
-export { auth }
+export { auth, protect }
 export default protect

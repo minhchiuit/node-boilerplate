@@ -4,6 +4,7 @@ import catchAsync from '../utils/catchAsync'
 import { userService } from '../services'
 
 /**
+ * Create a user
  * @POST api/v1/users/
  * @access private
  */
@@ -13,6 +14,7 @@ const createUser = catchAsync(async (req, res) => {
 })
 
 /**
+ * Get all users
  * @GET api/v1/users
  * @access public
  */
@@ -32,6 +34,7 @@ const getUsers = catchAsync(async (req, res) => {
 })
 
 /**
+ * Get a user by user id
  * @GET api/v1/users/:userId
  * @access public
  */
@@ -44,6 +47,7 @@ const getUser = catchAsync(async (req, res) => {
 })
 
 /**
+ * Update a user by userId
  * @PATCH api/v1/users/:userId
  * @access private
  */
@@ -53,6 +57,7 @@ const updateUser = catchAsync(async (req, res) => {
 })
 
 /**
+ * Delete user by userId
  * @DELETE api/v1/users/:userId
  * @access private
  */
@@ -63,4 +68,4 @@ const deleteUser = catchAsync(async (req, res) => {
     message: 'Deleted user successfully!!!',
   })
 })
-export default { createUser, getUsers, getUser, updateUser, deleteUser }
+export { createUser, getUsers, getUser, updateUser, deleteUser }

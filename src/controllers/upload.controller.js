@@ -1,17 +1,8 @@
-import createError from 'http-errors'
 import catchAsync from '../utils/catchAsync'
 import { uploadService } from '../services'
 
-import config from '../config/config'
-import {
-  userService,
-  authService,
-  tokenService,
-  emailService,
-} from '../services'
-import createHttpError from 'http-errors'
-
 /**
+ * Upload avatar
  * @POST api/uploadAvatar
  * @access private
  */
@@ -24,6 +15,4 @@ const uploadAvatar = catchAsync(async (req, res) => {
   })
 })
 
-export default {
-  uploadAvatar,
-}
+export { uploadAvatar }
