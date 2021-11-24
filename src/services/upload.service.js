@@ -8,7 +8,7 @@ cloudinary.v2.config({
 })
 
 /**
- *
+ * Upload file to cloudinary
  * @param {string} path link to file image in local
  * @param {string} folder store in cloudinary
  */
@@ -22,6 +22,11 @@ const upload = async (path, options) => {
   })
 }
 
+/**
+ * Upload file to cloudinary
+ * @param {string} path link to file image in local
+ *  @returns {Promise<url>}
+ */
 const uploadAvatar = async path => {
   const options = {
     folder: 'avatar',

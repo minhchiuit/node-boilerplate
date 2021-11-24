@@ -1,41 +1,41 @@
 import { Router } from 'express'
 const router = new Router()
-import authController from '../controllers/auth.controller'
-import protect, { auth } from '../middlewares/auth'
+import { authController } from '../controllers'
+import protect from '../middlewares/auth'
 import validate from '../middlewares/validate'
-import {
-  register,
-  activate,
-  signing,
-  forgotPassword,
-  resetPassword,
-  updateInfo,
-  singout,
-} from '../validations/auth.validation'
+import { authValidation } from '../validations'
 
-router.post('/register', validate(register), authController.register)
-router.post('/activation', validate(activate), authController.activate)
-router.post('/signing', validate(signing), authController.signing)
+router.post(
+  '/register',
+  validate(authValidation.register),
+  authController.register
+)
+router.post(
+  '/activation',
+  validate(authValidation.activate),
+  authController.activate
+)
+router.post('/login', validate(authValidation.login), authController.login)
 router.get('/access-token', authController.accessToken)
 router.post(
   '/forgot-password',
-  validate(forgotPassword),
+  validate(authValidation.forgotPassword),
   authController.forgotPassword
 )
 router.post(
   '/reset-password',
   protect,
-  validate(resetPassword),
+  validate(authValidation.resetPassword),
   authController.resetPassword
 )
 router.get('/info', protect, authController.info)
 router.patch(
   '/user-update',
   protect,
-  validate(updateInfo),
+  validate(authValidation.updateInfo),
   authController.updateInfo
 )
-router.post('/signout', protect, authController.singout)
+router.post('/logout', protect, authController.logout)
 
 router.patch('/google-signing', authController.loginWithGoogle)
 router.patch('/facebook-signing', authController.loginWithFacebook)

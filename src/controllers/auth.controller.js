@@ -1,4 +1,4 @@
-import createError from 'http-errors'
+import createHttpError from 'http-errors'
 import catchAsync from '../utils/catchAsync'
 
 import config from '../config/config'
@@ -8,9 +8,9 @@ import {
   tokenService,
   emailService,
 } from '../services'
-import createHttpError from 'http-errors'
 
 /**
+ * Register user
  * @POST api/register
  * @access public
  */
@@ -25,8 +25,9 @@ const register = catchAsync(async (req, res, next) => {
 })
 
 /**
+ * Acitvation user
  * @POST api/auth/activation
- * @access public
+ * @private public
  */
 const activate = catchAsync(async (req, res, next) => {
   // verify token
@@ -44,10 +45,11 @@ const activate = catchAsync(async (req, res, next) => {
 })
 
 /**
- * @POST api/signing
+ * Login user
+ * @POST api/login
  * @access public
  */
-const signing = catchAsync(async (req, res) => {
+const login = catchAsync(async (req, res) => {
   // Get cred
   const { email, password } = req.body
 
@@ -64,13 +66,14 @@ const signing = catchAsync(async (req, res) => {
 })
 
 /**
+ * Get access token
  * @GET api/access-token
  * @access private
  */
 const accessToken = catchAsync(async (req, res, next) => {
   //  rf_token
   const rf_token = req.signedCookies['_apprftoken']
-  if (!rf_token) return next(createError.BadRequest('Please sign in.'))
+  if (!rf_token) return next(createHttpError.BadRequest('Please sign in.'))
 
   // verify token
   const { sub: userId } = await tokenService.verifyRefreshToken(rf_token)
@@ -83,6 +86,7 @@ const accessToken = catchAsync(async (req, res, next) => {
 })
 
 /**
+ * Fotgot password
  * @POST api/forgot-password
  * @access public
  */
@@ -108,8 +112,9 @@ const forgotPassword = catchAsync(async (req, res, next) => {
 })
 
 /**
+ * Reset password
  * @POST api/reset-password
- * @access public
+ * @private public
  */
 const resetPassword = catchAsync(async (req, res) => {
   await userService.updateUserPasswordById(req.user.id, req.body)
@@ -120,6 +125,7 @@ const resetPassword = catchAsync(async (req, res) => {
 })
 
 /**
+ * Get info user when logged in
  * @GET api/info
  * @access private
  */
@@ -130,8 +136,9 @@ const info = catchAsync(async (req, res) => {
 })
 
 /**
+ * Update user when logged in
  * @PATCH api/user-update
- * @access public
+ * @access private
  */
 const updateInfo = catchAsync(async (req, res, next) => {
   const userUpdated = await userService.updateUserById(req.user.id, req.body)
@@ -139,10 +146,11 @@ const updateInfo = catchAsync(async (req, res, next) => {
 })
 
 /**
- * @GET api/singout
+ * Logout user
+ * @GET api/logout
  * @access private
  */
-const singout = catchAsync(async (req, res) => {
+const logout = catchAsync(async (req, res) => {
   // clear cookie
   res.clearCookie('_apprftoken', { path: '/api/auth/access' })
   // success
@@ -150,7 +158,8 @@ const singout = catchAsync(async (req, res) => {
 })
 
 /**
- * @POST api/signing-google
+ * Login with google
+ * @POST api/login-google
  * @access public
  */
 const loginWithGoogle = catchAsync(async (req, res) => {
@@ -166,7 +175,8 @@ const loginWithGoogle = catchAsync(async (req, res) => {
 })
 
 /**
- * @POST api/signing-google
+ * Login with facebook
+ * @POST api/login-facebook
  * @access public
  */
 const loginWithFacebook = catchAsync(async (req, res) => {
@@ -182,16 +192,16 @@ const loginWithFacebook = catchAsync(async (req, res) => {
   res.status(200).json({ success: true, message: 'Signning success.' })
 })
 
-export default {
+export {
   register,
   activate,
-  signing,
+  login,
   accessToken,
   forgotPassword,
   resetPassword,
   info,
   updateInfo,
-  singout,
+  logout,
   loginWithGoogle,
   loginWithFacebook,
 }

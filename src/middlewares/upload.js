@@ -1,35 +1,27 @@
 import fs from 'fs'
+import createHttpError from 'http-errors'
+import config from '../config/config'
 
 export default (req, res, next) => {
   // check file exist
   if (typeof req.file === 'undefined' || typeof req.body === 'undefined')
-    return res
-      .status(400)
-      .json({ success: false, message: 'Issue with uploading this image.' })
+    throw new createHttpError.BadRequest('Issue with uploading this image.')
 
   // app use upload
   const image = req.file.path
-
   // file type
-  if (
-    !req.file.mimetype.includes('jpeg') &&
-    !req.file.mimetype.includes('jpg') &&
-    !req.file.mimetype.includes('png')
-  ) {
+  if (!config.avatar_types.includes(req.file.mimetype)) {
     // remove file
     fs.unlinkSync(image)
-    return res
-      .status(400)
-      .json({ success: false, message: 'This file is not supported.' })
+    throw new createHttpError.BadRequest('This file is not supported.')
   }
 
   // file size
-  if (req.file.size > 1024 * 1024) {
+  if (req.file.size > config.avatar_limit_size) {
+    console.log(config.avatar_limit_size)
     // remove file
     fs.unlinkSync(image)
-    return res
-      .status(400)
-      .json({ success: false, message: 'This file is too large (Max: 1MB ).' })
+    throw new createHttpError.BadRequest('This file is too large (Max: 1MB ).')
   }
 
   // success

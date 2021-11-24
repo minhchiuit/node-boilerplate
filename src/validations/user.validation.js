@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 import { transValidations } from '../../lang/en'
 import config from './config.validation'
-const register = {
+const createUser = {
   firstName: yup.string().required(),
   lastName: yup.string().required(),
   email: yup.string().required().email(),
@@ -11,30 +11,29 @@ const register = {
     .required(),
 }
 
-const activate = {
-  activation_token: yup.string().required(),
+const getUsers = {
+  firstName: yup.string(),
+  lastName: yup.string(),
+  email: yup.string().email(),
+  role: yup.string(),
+  page: yup.number().integer(),
+  limit: yup.number().integer(),
+  sort: yup.string(),
+  select: yup.string(),
 }
 
-const login = {
-  email: yup.string().required(),
-  password: yup
+const getUser = {
+  userId: yup
     .string()
-    .matches(config.regexPassword, transValidations.password_incorrect)
+    .matches(config.regexObjectId, transValidations.objectId_type_incorrect)
     .required(),
 }
 
-const forgotPassword = {
-  email: yup.string().email().required(),
-}
-
-const resetPassword = {
-  password: yup
+const updateUser = {
+  userId: yup
     .string()
-    .matches(config.regexPassword, transValidations.password_incorrect)
+    .matches(config.regexObjectId, transValidations.objectId_type_incorrect)
     .required(),
-}
-
-const updateInfo = {
   firstName: yup.string(),
   lastName: yup.string(),
   email: yup.string().email(),
@@ -44,16 +43,11 @@ const updateInfo = {
   }),
 }
 
-const singout = {
-  refreshToken: yup.string().required(),
+const deleteUser = {
+  userId: yup
+    .string()
+    .matches(config.regexObjectId, transValidations.objectId_type_incorrect)
+    .required(),
 }
 
-export {
-  register,
-  activate,
-  login,
-  forgotPassword,
-  resetPassword,
-  updateInfo,
-  singout,
-}
+export { createUser, getUsers, getUser, updateUser, deleteUser }
