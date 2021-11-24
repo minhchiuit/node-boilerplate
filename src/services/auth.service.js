@@ -3,8 +3,7 @@ import fetch from 'node-fetch'
 import { google } from 'googleapis'
 
 import config from '../config/config'
-import { getUserByEmail } from './user.service'
-import { userService } from '.'
+import * as userService from './user.service'
 
 /**
  * Login user with email and password
@@ -13,13 +12,13 @@ import { userService } from '.'
  * @returns {Promise<User>}
  */
 const loginWithEmailAndPassword = async (email, password) => {
-  const user = await getUserByEmail(email)
+  const user = await userService.getUserByEmail(email)
   if (user && (await user.isPasswordMatch(password))) return user
   throw new createError.Unauthorized('Incorrect email or password')
 }
 
 /**
- *
+ * Login with google
  * @param {string} tokenId
  * @returns {Promise<User>}
  */
@@ -59,6 +58,12 @@ const loginWithGoogle = async tokenId => {
   return newUser
 }
 
+/**
+ * Login user with email and facebook
+ * @param {string} accessToken
+ * @param {string} userId
+ * @returns {Promise<User>}
+ */
 const loginWithFacebook = async (accessToken, userId) => {
   const url = `https://graph.facebook.com/v4.0/${userId}?fields=id,name,email,picture&access_token=${accessToken}`
   const data = fetch(url)

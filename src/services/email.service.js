@@ -48,7 +48,6 @@ if (node_env !== 'test') {
  * @param {string} to
  * @param {string} subject
  * @param {text|html} htmlContent
- * @returns {Promise}
  */
 const sendEmail = async (to, subject, htmlContent) => {
   let info = {
@@ -61,10 +60,9 @@ const sendEmail = async (to, subject, htmlContent) => {
 }
 
 /**
- * Send activation email
+ * Send email register
  * @param {string} to
  * @param {string} token
- * @returns {Promise}
  */
 const sendEmailRegister = async (to, token) => {
   const subject = 'ACTIVATE YOUR ACCOUNT'
@@ -150,11 +148,10 @@ const sendEmailRegister = async (to, token) => {
 }
 
 /**
- * Send activation email
+ * Sen email reset password
  * @param {string} to
  * @param {string} token
  * @param {string} name
- * @returns {Promise}
  */
 const sendEmailResetPassword = async (to, token, name) => {
   const subject = 'RESET YOUR PASSWORD'

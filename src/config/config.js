@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 export const {
   // app
   NODE_ENV: node_env,
@@ -75,5 +78,10 @@ const config = {
     apiKey: cloudApiKey,
     apiSecret: cloudApiSecret,
   },
+
+  max_event_listeners: 30,
+  avatar_directory: 'src/uploads',
+  avatar_types: ['image/jpg', 'image/png', 'image/jpeg'],
+  avatar_limit_size: 1048576, // 1048576 byte = 1MB
 }
 export default config

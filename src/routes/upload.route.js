@@ -2,7 +2,7 @@ import { Router } from 'express'
 import upload from '../middlewares/upload'
 import uploadSingle from '../middlewares/uploadImage'
 import protect from '../middlewares/auth'
-import uploadController from '../controllers/upload.controller'
+import { uploadController } from '../controllers'
 const router = new Router()
 
 router.post(
