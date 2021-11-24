@@ -21,14 +21,6 @@ const createUser = catchAsync(async (req, res) => {
 const getUsers = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['firstName', 'lastName', 'role', 'email'])
   let options = pick(req.query, ['sort', 'select', 'sortBy', 'limit', 'page'])
-  const customLabels = {
-    docs: 'users',
-    page: 'page',
-    totalPages: 'totalPages',
-    limit: 'limit',
-    totalDocs: 'totalUsers',
-  }
-  options = { ...options, customLabels }
   const result = await userService.queryUsers(filter, options)
   res.send(result)
 })

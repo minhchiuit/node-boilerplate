@@ -86,4 +86,4 @@ userSchema.plugin(paginate)
  */
 const User = mongoose.model('User', userSchema)
 
-export default User
+export { User }
