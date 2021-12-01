@@ -50,4 +50,21 @@ const deleteUser = {
     .required(),
 }
 
-export { createUser, getUsers, getUser, updateUser, deleteUser }
+const updateMe = {
+  firstName: yup.string(),
+  lastName: yup.string(),
+  email: yup.string().email(),
+  checkbox_selection: yup.string().when(['firstName', 'lastName', 'email'], {
+    is: (firstName, lastName, email) => !firstName && !lastName && !email,
+    then: yup.string().required(),
+  }),
+}
+
+export default {
+  createUser,
+  getUsers,
+  getUser,
+  updateUser,
+  deleteUser,
+  updateMe,
+}

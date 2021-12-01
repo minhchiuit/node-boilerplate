@@ -20,32 +20,23 @@ export const {
   JWT_RESET_PASSWORD_SECRET: resetPasswordSecret,
   JWT_RESET_PASSWORD_EXPIRATION: resetPasswordExpiration,
 
-  // google clients
-  G_CLIENT_ID: gClientId,
-  G_CLIENT_SECRET: gClientSecret,
-  G_REFRESH_TOKEN: gRefreshToken,
-  ADMIN_EMAIL: adminEmail,
-
-  G_SECRET: gSecret,
-  FB_SECRET: fbSecret,
   //cloud
   CLOUD_NAME: cloudName,
   CLOUD_API_KEY: cloudApiKey,
   CLOUD_API_SECRET: cloudApiSecret,
+
+  // smtp
+  SMTP_HOST: smtpHost,
+  SMTP_PORT: smtpPort,
+  SMTP_USERNAME: smtpUsername,
+  SMTP_PASSWORD: smtpPassword,
+  EMAIL_FROM: emailFrom,
 } = process.env
 
 const config = {
   env: node_env,
   port: app_port,
   mongodbUrl: mongodb_url,
-  googleClient: {
-    id: gClientId,
-    secret: gClientSecret,
-    refreshToken: gRefreshToken,
-  },
-  adminEmail,
-  gSecret,
-  fbSecret,
   jwt: {
     secret: {
       access: accessSecret,
@@ -73,15 +64,31 @@ const config = {
       secure: true,
     },
   },
-  cloud: {
-    name: cloudName,
-    apiKey: cloudApiKey,
-    apiSecret: cloudApiSecret,
+  cloudinaryV2: {
+    config: {
+      cloud_name: cloudName,
+      api_key: cloudApiKey,
+      api_secret: cloudApiSecret,
+    },
   },
 
-  max_event_listeners: 30,
-  avatar_directory: 'src/uploads',
-  avatar_types: ['image/jpg', 'image/png', 'image/jpeg'],
-  avatar_limit_size: 1048576, // 1048576 byte = 1MB
+  email: {
+    smtp: {
+      host: smtpHost,
+      port: smtpPort,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: smtpUsername, // generated ethereal user
+        pass: smtpPassword, // generated ethereal password
+      },
+    },
+    from: emailFrom,
+  },
+  app: {
+    max_event_listeners: 30,
+    upload_directory: 'src/uploads',
+    upload_limit_size: 1048576, // 1048576 byte = 1MB
+    image_types: ['image/jpg', 'image/png', 'image/jpeg'],
+  },
 }
 export default config

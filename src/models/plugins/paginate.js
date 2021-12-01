@@ -107,7 +107,6 @@ const paginate = schema => {
     const docsPromise = query.exec()
     const [totalDocs, docs] = await Promise.all([countPromise, docsPromise])
     return {
-      success: true,
       [labelDocs]: docs,
       [labelPage]: page,
       [labelTotalPages]: Math.ceil(totalDocs / limit),

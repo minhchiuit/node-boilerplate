@@ -17,8 +17,12 @@ const validate = schema => (req, res, next) => {
 
     Object.assign(req, value)
     return next()
-  } catch (error) {
-    next(new httpError.BadRequest(error.errors))
+  } catch (err) {
+    return res.status(400).json({
+      code: 400,
+      name: err.name,
+      error: err.errors,
+    })
   }
 }
 

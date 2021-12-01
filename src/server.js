@@ -12,13 +12,13 @@ import httpError from 'http-errors'
 import 'colors'
 
 import { jwtStrategy } from './config/passport'
+import config from './config/config'
 import db from './config/db'
 import logger from './config/logger'
-import { node_env, app_port } from './config/config'
+import { authLimiter } from './config/rateLimit'
 import errorHandler from './middlewares/error'
 import routes from './routes/_index'
-import { authLimiter } from './config/rateLimit'
-import config from './config/config'
+
 // connect to database
 db.connect()
 
@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser(config.jwt.secret.refresh))
 
 // dev logging middleware
-if (node_env === 'development') {
+if (config.env === 'development') {
   app.use(morgan('dev'))
 }
 
@@ -49,7 +49,7 @@ app.use(helmet())
 app.use(xss())
 
 // limit repeated failed requests to auth endpoints
-if (node_env === 'production') {
+if (config.env === 'production') {
   app.use('/api/auth', authLimiter)
 }
 
@@ -78,8 +78,10 @@ app.use((req, res, next) => {
 app.use(errorHandler)
 
 const server = app.listen(
-  app_port,
-  logger.info(`Server running in ${node_env} mode on port ${app_port}`.cyan)
+  config.port,
+  logger.info(
+    `Server running in ${config.env} mode on port ${config.port}`.cyan
+  )
 )
 
 // Handle unhandled promise rejections

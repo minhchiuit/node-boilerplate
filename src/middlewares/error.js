@@ -1,21 +1,13 @@
-import createError, { HttpError } from 'http-errors'
+import createHttpError, { HttpError } from 'http-errors'
+import { node_env } from '../config/config'
 import logger from '../config/logger'
 
 const errorHandler = (err, req, res, next) => {
   let error = { ...err }
-
   error.message = err.message
 
   // Log to console for dev
   logger.error(err)
-
-  // Yup validator errors
-  if (Array.isArray(err.message)) {
-    return res.status(err.statusCode).json({
-      success: false,
-      error: err.message,
-    })
-  }
 
   if (err instanceof HttpError) {
     error.statusCode = err.statusCode
@@ -24,26 +16,27 @@ const errorHandler = (err, req, res, next) => {
   if (err.name === 'CastError') {
     // Mongoose bad ObjectId
     const message = `Resource not found`
-    error = new createError.NotFound(message)
+    error = new createHttpError.NotFound(message)
   }
 
   // Mongoose duplicate key
   if (err.code === 11000) {
     const message = 'Duplicate field value entered'
-    error = new createError.BadRequest(message)
+    error = new createHttpError.BadRequest(message)
   }
 
   // Mongoose validation error
   if (err.name === 'ValidationError') {
     const message = Object.values(err.errors).map(val => val.message)
-    error = new createError.BadRequest(message)
+    error = new createHttpError.BadRequest(message)
   }
 
   res.status(error.statusCode || 500).json({
-    success: false,
-    error:
+    name: err.name,
+    code: error.statusCode || 500,
+    message:
       (error.statusCode && error.message) ||
-      createError.InternalServerError().message,
+      createHttpError.InternalServerError().message,
   })
 }
 

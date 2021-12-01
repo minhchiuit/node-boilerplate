@@ -2,6 +2,7 @@ import createError from 'http-errors'
 import pick from '../utils/pick'
 import catchAsync from '../utils/catchAsync'
 import { userService } from '../services'
+import { tranSuccess } from '../../lang/en'
 
 /**
  * Create a user
@@ -10,7 +11,7 @@ import { userService } from '../services'
  */
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body)
-  res.status(201).send(user)
+  res.status(201).json({ user, message: tranSuccess.created_success('user') })
 })
 
 /**
@@ -21,14 +22,6 @@ const createUser = catchAsync(async (req, res) => {
 const getUsers = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['firstName', 'lastName', 'role', 'email'])
   let options = pick(req.query, ['sort', 'select', 'sortBy', 'limit', 'page'])
-  const customLabels = {
-    docs: 'users',
-    page: 'page',
-    totalPages: 'totalPages',
-    limit: 'limit',
-    totalDocs: 'totalUsers',
-  }
-  options = { ...options, customLabels }
   const result = await userService.queryUsers(filter, options)
   res.send(result)
 })
@@ -43,7 +36,7 @@ const getUser = catchAsync(async (req, res) => {
   if (!user) {
     throw createError.NotFound()
   }
-  res.send(user)
+  res.status(200).json({ user })
 })
 
 /**
@@ -52,8 +45,11 @@ const getUser = catchAsync(async (req, res) => {
  * @access private
  */
 const updateUser = catchAsync(async (req, res) => {
-  const user = await userService.updateUserById(req.params.userId, req.body)
-  res.send(user)
+  const userUpdated = await userService.updateUserById(
+    req.params.userId,
+    req.body
+  )
+  res.status(200).json({ userUpdated, message: tranSuccess.updated_success })
 })
 
 /**
@@ -63,9 +59,36 @@ const updateUser = catchAsync(async (req, res) => {
  */
 const deleteUser = catchAsync(async (req, res) => {
   await userService.deleteUserById(req.params.userId)
-  res.status(200).json({
-    success: true,
-    message: 'Deleted user successfully!!!',
-  })
+  res.status(200).json({ message: tranSuccess.deleted_success('user') })
 })
-export { createUser, getUsers, getUser, updateUser, deleteUser }
+
+/**
+ * Get info user when logged in
+ * @GET api/info
+ * @access private
+ */
+const getMe = catchAsync(async (req, res) => {
+  const user = await userService.getUserById(req.user.id)
+
+  res.json({ user })
+})
+
+/**
+ * Update user when logged in
+ * @PATCH api/user-update
+ * @access private
+ */
+const updateMe = catchAsync(async (req, res, next) => {
+  const userUpdated = await userService.updateUserById(req.user.id, req.body)
+  res.status(200).json({ userUpdated })
+})
+
+export default {
+  createUser,
+  getUsers,
+  getUser,
+  updateUser,
+  deleteUser,
+  getMe,
+  updateMe,
+}

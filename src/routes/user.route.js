@@ -1,23 +1,43 @@
 import { Router } from 'express'
 const router = new Router()
 import validate from '../middlewares/validate'
-import { authValidation } from '../validations'
-import { auth } from '../middlewares/auth'
+import { userValidation } from '../validations'
+import { auth, protect } from '../middlewares/auth'
 import { userController } from '../controllers'
 
 router
   .route('/')
   .post(
     auth('admin'),
-    validate(authValidation.register),
+    validate(userValidation.createUser),
     userController.createUser
   )
-  .get(auth('admin'), userController.getUsers)
+  .get(
+    auth('admin'),
+    validate(userValidation.getUsers),
+    userController.getUsers
+  )
+
+router.get('/me', protect, userController.getMe)
+router.patch(
+  '/update-me',
+  protect,
+  validate(userValidation.updateMe),
+  userController.updateMe
+)
 
 router
   .route('/:userId')
-  .get(userController.getUser)
-  .patch(auth('admin'), userController.updateUser)
-  .delete(auth('admin'), userController.deleteUser)
+  .get(validate(userValidation.getUser), userController.getUser)
+  .patch(
+    auth('admin'),
+    validate(userValidation.updateUser),
+    userController.updateUser
+  )
+  .delete(
+    auth('admin'),
+    validate(userValidation.deleteUser),
+    userController.deleteUser
+  )
 
 export default router

@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors'
 import catchAsync from '../utils/catchAsync'
-
+import { tranSuccess, transErrors } from '../../lang/en'
 import config from '../config/config'
 import {
   userService,
@@ -18,10 +18,7 @@ const register = catchAsync(async (req, res, next) => {
   const activation_token = await tokenService.generateActivationToken(req.body)
   await emailService.sendEmailRegister(req.body.email, activation_token)
   // registration success
-  return res.status(200).json({
-    success: true,
-    message: 'Welcome! Please check your email.',
-  })
+  return res.status(200).json({ message: tranSuccess.user_registered })
 })
 
 /**
@@ -38,10 +35,7 @@ const activate = catchAsync(async (req, res, next) => {
   await userService.createUser(newUser)
 
   // activation success
-  return res.status(200).json({
-    success: true,
-    message: 'Your account has been activated, you can now sign in.',
-  })
+  return res.status(200).json({ message: tranSuccess.account_actived })
 })
 
 /**
@@ -62,7 +56,7 @@ const login = catchAsync(async (req, res) => {
   // store refresh token
   res.cookie('_apprftoken', rf_token, config.jwt.cookie)
 
-  res.status(200).json({ success: true, message: 'Signning success.' })
+  res.status(200).json({ message: tranSuccess.login_success })
 })
 
 /**
@@ -82,7 +76,7 @@ const accessToken = catchAsync(async (req, res, next) => {
   const ac_token = await tokenService.generateAccessToken(userId)
 
   // access success
-  return res.status(200).json({ success: true, ac_token })
+  return res.status(200).json({ ac_token })
 })
 
 /**
@@ -93,7 +87,7 @@ const accessToken = catchAsync(async (req, res, next) => {
 const forgotPassword = catchAsync(async (req, res, next) => {
   // check email
   const user = await userService.getUserByEmail(req.body.email)
-  if (!user) return next(createHttpError.NotFound('Email is not exists.'))
+  if (!user) return next(createHttpError.NotFound(transErrors.email_undefined))
 
   const ac_token = await tokenService.generateAccessToken(user.id)
 
@@ -105,10 +99,7 @@ const forgotPassword = catchAsync(async (req, res, next) => {
   )
 
   // success
-  res.status(200).json({
-    success: true,
-    message: 'Re-send the password, please check your email.',
-  })
+  res.status(200).json({ message: tranSuccess.sendmail_reset_password_success })
 })
 
 /**
@@ -125,27 +116,6 @@ const resetPassword = catchAsync(async (req, res) => {
 })
 
 /**
- * Get info user when logged in
- * @GET api/info
- * @access private
- */
-const info = catchAsync(async (req, res) => {
-  const user = await userService.getUserById(req.user.id)
-
-  res.json({ success: true, user })
-})
-
-/**
- * Update user when logged in
- * @PATCH api/user-update
- * @access private
- */
-const updateInfo = catchAsync(async (req, res, next) => {
-  const userUpdated = await userService.updateUserById(req.user.id, req.body)
-  res.status(200).json({ success: true, userUpdated })
-})
-
-/**
  * Logout user
  * @GET api/logout
  * @access private
@@ -154,54 +124,15 @@ const logout = catchAsync(async (req, res) => {
   // clear cookie
   res.clearCookie('_apprftoken', { path: '/api/auth/access' })
   // success
-  res.status(200).json({ success: true, message: 'Signout success.' })
+  res.status(200).json({ message: tranSuccess.logout_success })
 })
 
-/**
- * Login with google
- * @POST api/login-google
- * @access public
- */
-const loginWithGoogle = catchAsync(async (req, res) => {
-  const user = await authService.loginWithGoogle(req.body)
-
-  // refresh token
-  const rf_token = await tokenService.generateRefreshToken(user.id)
-
-  // store refresh token
-  res.cookie('_apprftoken', rf_token, config.jwt.cookie)
-
-  res.status(200).json({ success: true, message: 'Signning success.' })
-})
-
-/**
- * Login with facebook
- * @POST api/login-facebook
- * @access public
- */
-const loginWithFacebook = catchAsync(async (req, res) => {
-  const { accessToken, userId } = req.body
-  const user = await authService.loginWithFacebook(accessToken, userId)
-
-  // refresh token
-  const rf_token = await tokenService.generateRefreshToken(user.id)
-
-  // store refresh token
-  res.cookie('_apprftoken', rf_token, config.jwt.cookie)
-
-  res.status(200).json({ success: true, message: 'Signning success.' })
-})
-
-export {
+export default {
   register,
   activate,
   login,
   accessToken,
   forgotPassword,
   resetPassword,
-  info,
-  updateInfo,
   logout,
-  loginWithGoogle,
-  loginWithFacebook,
 }

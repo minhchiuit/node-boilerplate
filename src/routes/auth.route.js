@@ -3,11 +3,11 @@ const router = new Router()
 import { authController } from '../controllers'
 import protect from '../middlewares/auth'
 import validate from '../middlewares/validate'
-import { authValidation } from '../validations'
+import { authValidation, userValidation } from '../validations'
 
 router.post(
   '/register',
-  validate(authValidation.register),
+  validate(userValidation.createUser),
   authController.register
 )
 router.post(
@@ -28,16 +28,7 @@ router.post(
   validate(authValidation.resetPassword),
   authController.resetPassword
 )
-router.get('/info', protect, authController.info)
-router.patch(
-  '/user-update',
-  protect,
-  validate(authValidation.updateInfo),
-  authController.updateInfo
-)
-router.post('/logout', protect, authController.logout)
 
-router.patch('/google-signing', authController.loginWithGoogle)
-router.patch('/facebook-signing', authController.loginWithFacebook)
+router.post('/logout', protect, authController.logout)
 
 export default router

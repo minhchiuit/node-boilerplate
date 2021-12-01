@@ -1,8 +1,9 @@
 import multer from 'multer'
+import config from '../config/config'
 const storage = multer.diskStorage({
   // destination
   destination: (req, file, cb) => {
-    cb(null, 'src/uploads/')
+    cb(null, config.app.upload_directory)
   },
   // filename
   filename: (req, file, cb) => {
@@ -14,13 +15,9 @@ const fileFilter = (req, file, cb) => {
   cb(null, true)
 }
 
-const upload = multer({
+const uploadStorage = multer({
   storage: storage,
   fileFilter: fileFilter,
 })
 
-const uploadSingle = name => (req, res, next) => {
-  return upload.single(name)(req, res, next)
-}
-
-export default uploadSingle
+export default uploadStorage

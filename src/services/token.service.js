@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { transErrors } from '../../lang/en'
 import httpError from 'http-errors'
 import {
   accessSecret,
@@ -10,7 +11,7 @@ import {
   resetPasswordSecret,
   resetPasswordExpiration,
 } from '../config/config'
-import * as userService from './user.service'
+import userService from './user.service'
 
 /**
  * private function generateToken
@@ -58,7 +59,7 @@ const verifyToken = (token, secretKey) => {
  */
 const generateActivationToken = async userBody => {
   const user = await userService.getUserByEmail(userBody.email)
-  if (user) throw new httpError.BadRequest('Email already exists.')
+  if (user) throw new httpError.BadRequest(transErrors.account_in_use)
 
   const token = await generateToken(
     userBody,
@@ -103,8 +104,7 @@ const generateAccessToken = async userId => {
  */
 const generateResetPasswordToken = async email => {
   const user = await userService.getUserByEmail(email)
-  if (!user)
-    throw httpError.BadRequest('This email is not registered in our system.')
+  if (!user) throw httpError.BadRequest(transErrors.email_undefined)
   const token = await generateToken(
     { sub: user.id },
     resetPasswordSecret,
@@ -131,7 +131,7 @@ const verifyRefreshToken = async token => {
   return await verifyToken(token, refreshSecret)
 }
 
-export {
+export default {
   generateToken,
   verifyToken,
   generateActivationToken,

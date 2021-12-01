@@ -1,5 +1,5 @@
 import createError from 'http-errors'
-import User from '../models/user.model'
+import { User } from '../models'
 
 /**
  * Create user
@@ -22,6 +22,14 @@ const createUser = async userBody => {
  * @returns {Promise<users>}
  */
 const queryUsers = async (filter, options) => {
+  const customLabels = {
+    docs: 'users',
+    page: 'page',
+    totalPages: 'totalPages',
+    limit: 'limit',
+    totalDocs: 'totalUsers',
+  }
+  options = { ...options, customLabels }
   const users = await User.paginate(filter, options)
   return users
 }
@@ -56,7 +64,7 @@ const updateUserById = async (userId, body) => {
   const user = await getUserById(userId)
 
   if (!user) {
-    throw createError.NotFound('Not found user')
+    throw createError.NotFound()
   }
 
   if (body.email && (await getUserByEmail(body.email))) {
@@ -77,7 +85,7 @@ const updateUserById = async (userId, body) => {
 const updateUserPasswordById = async (userId, body) => {
   const user = await getUserById(userId)
   if (!user) {
-    throw createError.NotFound('Not found user')
+    throw createError.NotFound()
   }
   Object.assign(user, body)
   await user.save()
@@ -92,13 +100,13 @@ const updateUserPasswordById = async (userId, body) => {
 const deleteUserById = async userId => {
   const user = await getUserById(userId)
   if (!user) {
-    throw createError.NotFound('Not found user')
+    throw createError.NotFound()
   }
   const result = await user.remove()
   return result
 }
 
-export {
+export default {
   createUser,
   queryUsers,
   getUserById,

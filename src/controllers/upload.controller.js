@@ -1,5 +1,6 @@
 import catchAsync from '../utils/catchAsync'
 import { uploadService } from '../services'
+import { tranSuccess } from '../../lang/en'
 
 /**
  * Upload avatar
@@ -7,12 +8,8 @@ import { uploadService } from '../services'
  * @access private
  */
 const uploadAvatar = catchAsync(async (req, res) => {
-  const result = await uploadService.uploadAvatar(req.file.path)
-  return res.status(200).json({
-    success: true,
-    message: 'Upload successfully.',
-    result,
-  })
+  const url = await uploadService.uploadAvatar(req.file.path)
+  return res.status(200).json({ message: tranSuccess.upload_success, url })
 })
 
-export { uploadAvatar }
+export default { uploadAvatar }

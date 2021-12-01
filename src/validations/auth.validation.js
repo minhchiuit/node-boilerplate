@@ -34,26 +34,15 @@ const resetPassword = {
     .required(),
 }
 
-const updateInfo = {
-  firstName: yup.string(),
-  lastName: yup.string(),
-  email: yup.string().email(),
-  checkbox_selection: yup.string().when(['firstName', 'lastName', 'email'], {
-    is: (firstName, lastName, email) => !firstName && !lastName && !email,
-    then: yup.string().required(),
-  }),
-}
-
 const singout = {
   refreshToken: yup.string().required(),
 }
 
-export {
+export default {
   register,
   activate,
   login,
   forgotPassword,
   resetPassword,
-  updateInfo,
   singout,
 }

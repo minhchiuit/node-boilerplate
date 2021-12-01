@@ -1,14 +1,15 @@
 import { Router } from 'express'
 import upload from '../middlewares/upload'
-import uploadSingle from '../middlewares/uploadImage'
+import uploadStorage from '../middlewares/uploadStorage'
 import protect from '../middlewares/auth'
 import { uploadController } from '../controllers'
+
 const router = new Router()
 
 router.post(
   '/',
   protect,
-  uploadSingle('avatar'),
+  uploadStorage.single('avatar'),
   upload,
   uploadController.uploadAvatar
 )

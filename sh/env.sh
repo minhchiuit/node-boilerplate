@@ -21,15 +21,6 @@ export JWT_REFRESH_EXPIRATION=30days
 export JWT_RESET_PASSWORD_EXPIRATION=10m
 export JWT_ACTIVATE_EXPIRATION=5m
 
-
-# SMTP configuration options for the email service
-# For testing, you can use a fake SMTP service like Ethereal: https://ethereal.email/create
-export SMTP_HOST=smtp.gmail.com
-export SMTP_PORT=587
-export SMTP_USERNAME=minhchiu.it@gmail.com
-export SMTP_PASSWORD=Minh.it.01
-export EMAIL_FROM=minhch.vn@gmail.com
-
 # Token github
 # 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
 
@@ -51,3 +42,11 @@ export CLOUD_API_SECRET=X_g1A1Y2E1s9bGeuFaALttvOeLg
 # 
 export FB_SECRET=GwcTnAckK7xgb3jkzbSUkUHemz4Kbzg36hRHTjNb
 export G_SECRET=GwcTnAckK7xgb3jkzbSUkUHemz4Kbzg36hRHTjNb
+
+
+# SMTP configuration options for the email service
+export SMTP_HOST=smtp.gmail.com
+export SMTP_PORT=587
+export SMTP_USERNAME=minhchiu.it
+export SMTP_PASSWORD=Minh.it.01
+export EMAIL_FROM=minhchiu.it
